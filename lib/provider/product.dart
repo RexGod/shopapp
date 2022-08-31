@@ -1,4 +1,6 @@
-class Prodcut {
+import 'package:flutter/foundation.dart';
+
+class Prodcut with ChangeNotifier {
   final String id;
   final String title;
   final String description;
@@ -13,4 +15,9 @@ class Prodcut {
       required this.imagUrl,
       required this.price,
       this.isFavorite = false});
+
+  void toggleFavorite() {
+    isFavorite = !isFavorite;
+    notifyListeners();
+  }
 }
