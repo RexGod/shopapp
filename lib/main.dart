@@ -1,7 +1,10 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-
+import './screens/product_detail_screeen.dart';
+import './screens/product_overview_screen.dart';
+import './provider/product_provider.dart';
+import 'package:provider/provider.dart';
 void main() {
   runApp(MyApp());
 }
@@ -9,26 +12,21 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Shop',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ShopApp(),
-    );
-  }
-}
-
-class ShopApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('My Shop'),
-      ),
-      body: Center(
-        child: Text('shop page center'),
+    return ChangeNotifierProvider(
+      create: (context) => ProductProvider(),
+      child: MaterialApp(
+        title: 'Shop',
+        theme: ThemeData(
+            primarySwatch: Colors.purple,
+            // ignore: deprecated_member_use
+            accentColor: Colors.deepOrange,
+            fontFamily: 'Lato'),
+        home: OverViewScreen(),
+       routes: {
+        DetailScreen.routeName :(context) => DetailScreen()
+       },
       ),
     );
   }
+  
 }
