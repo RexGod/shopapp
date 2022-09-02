@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/gridViewbuilder.dart';
+import '../widgets/badge.dart';
+import '../provider/cart.dart';
 
 enum SelectedValueFilterOption { all, favorites }
 
@@ -39,7 +42,18 @@ class _OverViewScreenState extends State<OverViewScreen> {
                   }
                 });
               },
-              icon: Icon(Icons.more_vert))
+              icon: Icon(Icons.more_vert)),
+          Consumer<Cart>(
+            builder: (_, cart, children) => Badge(
+              value: cart.counter.toString(),
+              color: Theme.of(context).accentColor,
+              child: children as Widget,
+            ),
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {},
+            ),
+          )
         ],
       ),
       body: GridViewProduct(_isFavorite),
