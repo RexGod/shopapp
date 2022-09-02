@@ -1,6 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class Badge extends StatelessWidget {
+  // ignore: prefer_const_constructors_in_immutables, use_key_in_widget_constructors
   Badge({
     required this.child,
     required this.value,
@@ -21,20 +24,21 @@ class Badge extends StatelessWidget {
           right: 8,
           top: 8,
           child: Container(
-            padding: EdgeInsets.all(2.0),
+            padding: const EdgeInsets.all(2.0),
             // color: Theme.of(context).accentColor,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
+              // ignore: unnecessary_null_comparison, prefer_if_null_operators
               color: color != null ? color : Theme.of(context).accentColor,
             ),
-            constraints: BoxConstraints(
+            constraints: const BoxConstraints(
               minWidth: 16,
               minHeight: 16,
             ),
             child: Text(
               value,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 10,
               ),
             ),
