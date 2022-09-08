@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../widgets/gridViewbuilder.dart';
 import '../widgets/badge.dart';
 import '../provider/cart.dart';
+import './cart_screen.dart';
 
 enum SelectedValueFilterOption { all, favorites }
 
@@ -51,7 +52,9 @@ class _OverViewScreenState extends State<OverViewScreen> {
             ),
             child: IconButton(
               icon: Icon(Icons.shopping_cart),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
             ),
           )
         ],
