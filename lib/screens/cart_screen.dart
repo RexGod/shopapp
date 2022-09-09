@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopapp/screens/order_screen.dart';
+import '../screens/order_screen.dart';
 import '../provider/cart.dart' show Cart;
 import '../widgets/cart_items.dart';
 import '../provider/order.dart' as ord;
