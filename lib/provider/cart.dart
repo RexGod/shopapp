@@ -26,7 +26,7 @@ class Cart with ChangeNotifier {
       _items.update(
           productId,
           (value) => CartItem(
-              title: value.id,
+              title: value.title,
               id: value.id,
               price: value.price,
               quantity: value.quantity + 1));
