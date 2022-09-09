@@ -6,6 +6,7 @@ import '../widgets/gridViewbuilder.dart';
 import '../widgets/badge.dart';
 import '../provider/cart.dart';
 import './cart_screen.dart';
+import '../widgets/drawer.dart';
 
 enum SelectedValueFilterOption { all, favorites }
 
@@ -59,6 +60,7 @@ class _OverViewScreenState extends State<OverViewScreen> {
           )
         ],
       ),
+      drawer: AppDrawer(),
       body: GridViewProduct(_isFavorite),
     );
   }
