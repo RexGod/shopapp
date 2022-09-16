@@ -117,6 +117,12 @@ class _EditScreenState extends State<EditScreen> {
               textInputAction: TextInputAction.next,
               onFieldSubmitted: (_) =>
                   FocusScope.of(context).requestFocus(_priceFocus),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'please Enter title';
+                }
+                return null;
+              },
               onSaved: (newValue) => _editProduct = Product(
                   id: _editProduct.id,
                   title: newValue.toString(),
@@ -132,6 +138,18 @@ class _EditScreenState extends State<EditScreen> {
               focusNode: _priceFocus,
               onFieldSubmitted: (_) =>
                   FocusScope.of(context).requestFocus(_descriptionFocus),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'please fill price';
+                }
+                if (double.tryParse(value) == null) {
+                  return 'Please enter a valid number.';
+                }
+                if (double.parse(value) <= 0) {
+                  return 'Please enter a number greater than zero.';
+                }
+                return null;
+              },
               onSaved: (newValue) => _editProduct = Product(
                   id: _editProduct.id,
                   title: _editProduct.title,
@@ -145,6 +163,15 @@ class _EditScreenState extends State<EditScreen> {
               focusNode: _descriptionFocus,
               maxLines: 3,
               keyboardType: TextInputType.multiline,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter a description.';
+                }
+                if (value.length < 10) {
+                  return 'Should be at least 10 characters long.';
+                }
+                return null;
+              },
               onSaved: (newValue) => _editProduct = Product(
                   id: _editProduct.id,
                   title: _editProduct.title,
@@ -185,6 +212,21 @@ class _EditScreenState extends State<EditScreen> {
                       _saveForm();
                     },
                     focusNode: _imageUrlFocus,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter an image URL.';
+                      }
+                      if (!value.startsWith('http') &&
+                          !value.startsWith('https')) {
+                        return 'Please enter a valid URL.';
+                      }
+                      if (!value.endsWith('.png') &&
+                          !value.endsWith('.jpg') &&
+                          !value.endsWith('.jpeg')) {
+                        return 'Please enter a valid image URL.';
+                      }
+                      return null;
+                    },
                     onSaved: (newValue) => _editProduct = Product(
                         id: _editProduct.id,
                         title: _editProduct.title,
