@@ -43,13 +43,13 @@ class CartItem extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        FlatButton(
+                        TextButton(
                           onPressed: () {
                             Navigator.of(context).pop(false);
                           },
                           child: const Text('NO'),
                         ),
-                        FlatButton(
+                        TextButton(
                           onPressed: () {
                             Navigator.of(context).pop(true);
                           },
