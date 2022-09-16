@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:shopapp/screens/order_screen.dart';
+import '../screens/produnt_manager_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -9,7 +9,7 @@ class AppDrawer extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             ListTile(
@@ -24,6 +24,13 @@ class AppDrawer extends StatelessWidget {
               title: const Text('order'),
               onTap: () {
                 Navigator.of(context).pushNamed(Order.routeName);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('edit'),
+              onTap: () {
+                Navigator.of(context).pushNamed(ProductMangaerScreen.routeName);
               },
             )
           ],
