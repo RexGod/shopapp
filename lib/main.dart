@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import './screens/cart_screen.dart';
 import './screens/order_screen.dart';
 import './provider/order.dart' as ord;
+import './screens/produnt_manager_screen.dart';
+import './screens/edit_prouct_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Shop',
         theme: ThemeData(
             primarySwatch: Colors.purple,
@@ -39,6 +42,8 @@ class MyApp extends StatelessWidget {
           DetailScreen.routeName: (context) => DetailScreen(),
           CartScreen.routeName: (context) => CartScreen(),
           Order.routeName: (context) => Order(),
+          ProductMangaerScreen.routeName: (context) => ProductMangaerScreen(),
+          EditScreen.routeName: (context) => EditScreen(),
         },
       ),
     );
