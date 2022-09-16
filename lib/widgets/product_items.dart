@@ -37,12 +37,22 @@ class ProductItems extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             trailing: IconButton(
-              icon: const Icon(Icons.shopping_cart),
-              // ignore: deprecated_member_use
-              color: Theme.of(context).accentColor,
-              onPressed: () => cart.addItemsToShoppingCart(
-                  product.id, product.title, product.price),
-            )),
+                icon: const Icon(Icons.shopping_cart),
+                // ignore: deprecated_member_use
+                color: Theme.of(context).accentColor,
+                onPressed: () {
+                  cart.addItemsToShoppingCart(
+                      product.id, product.title, product.price);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('Item added to cart'),
+                      duration: const Duration(seconds: 2),
+                      action: SnackBarAction(
+                          label: 'UNDO',
+                          onPressed: () => cart.removeSingleItems(product.id)),
+                    ),
+                  );
+                })),
         child: InkWell(
           onTap: () {
             Navigator.of(context)
