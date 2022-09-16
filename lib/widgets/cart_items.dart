@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import '../provider/cart.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +34,32 @@ class CartItem extends StatelessWidget {
         ),
       ),
       direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) {
+        return showDialog(
+            context: context,
+            builder: ((_) => AlertDialog(
+                  title: const Text('Are you sure'),
+                  actions: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(false);
+                          },
+                          child: const Text('NO'),
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(true);
+                          },
+                          child: const Text('YES'),
+                        )
+                      ],
+                    )
+                  ],
+                )));
+      },
       onDismissed: (direction) {
         Provider.of<Cart>(context, listen: false).removeItems(productId);
       },
