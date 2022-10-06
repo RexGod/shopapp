@@ -80,7 +80,20 @@ class _OverViewScreenState extends State<OverViewScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: GridViewProduct(_isFavorite),
+      body: _isLoading
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text('Loading')
+                ],
+              ),
+            )
+          : GridViewProduct(_isFavorite),
     );
   }
 }
