@@ -5,14 +5,15 @@ import './product.dart';
 import 'package:http/http.dart' as http;
 
 class ProductProvider with ChangeNotifier {
-  final List<Product> _items = [
-    Product(
+   List<Product> _items = [
+    /* Product(
       id: 'p1',
       title: 'Red Shirt',
       description: 'A red shirt - it is pretty red!',
       price: 29.99,
       imagUrl:
-          'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+
+          'https://images.unsplash.com/photo-1664747477807-566fbc875bdc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzNXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60',
     ),
     Product(
       id: 'p2',
@@ -20,14 +21,14 @@ class ProductProvider with ChangeNotifier {
       description: 'A nice pair of trousers.',
       price: 59.99,
       imagUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+          'https://images.unsplash.com/photo-1664747477807-566fbc875bdc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzNXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60',
     ),
     Product(
       id: 'p3',
       title: 'Yellow Scarf',
       description: 'Warm and cozy - exactly what you need for the winter.',
       price: 19.99,
-      imagUrl: 'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
+      imagUrl: 'https://images.unsplash.com/photo-1665054546585-11413bcdfb52?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyOHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60',
     ),
     Product(
       id: 'p4',
@@ -35,8 +36,8 @@ class ProductProvider with ChangeNotifier {
       description: 'Prepare any meal you want.',
       price: 49.99,
       imagUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
+          'https://images.unsplash.com/photo-1665054546585-11413bcdfb52?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyOHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60',
+    ), */
   ];
 
   List<Product> get items {
@@ -49,6 +50,28 @@ class ProductProvider with ChangeNotifier {
 
   Product findById(String id) {
     return items.firstWhere((element) => element.id == id);
+  }
+
+  Future<void> fetchProducts() async {
+    var url =
+        Uri.https('shopapppra-default-rtdb.firebaseio.com', '/products.json');
+    try {
+      final response = await http.get(url);
+      final extractData = json.decode(response.body) as Map<String, dynamic>;
+      final List<Product> loadedProduct = [];
+      extractData.forEach((prodId, prodData) {
+        loadedProduct.add(Product(
+            id: prodId,
+            title: prodData['title'],
+            description: prodData['description'],
+            imagUrl: prodData['imagUrl'],
+            price: prodData['price']));
+      });
+      _items = loadedProduct;
+      notifyListeners();
+    } catch (error) {
+      rethrow;
+    }
   }
 
   void updateProduct(String id, Product newproduct) {
@@ -66,7 +89,7 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future <void> addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     var url =
         Uri.https('shopapppra-default-rtdb.firebaseio.com', '/products.json');
     return http
