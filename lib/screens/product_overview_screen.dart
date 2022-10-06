@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopapp/provider/product_provider.dart';
 import '../widgets/gridViewbuilder.dart';
 import '../widgets/badge.dart';
 import '../provider/cart.dart';
@@ -18,6 +19,24 @@ class OverViewScreen extends StatefulWidget {
 
 class _OverViewScreenState extends State<OverViewScreen> {
   var _isFavorite = false;
+  var _isInit = true;
+  var _isLoading = false;
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<ProductProvider>(context).fetchProducts().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
