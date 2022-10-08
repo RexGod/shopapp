@@ -1,44 +1,11 @@
 import 'dart:convert';
-
+import '../models/http_Exeption.dart';
 import 'package:flutter/material.dart';
 import './product.dart';
 import 'package:http/http.dart' as http;
 
 class ProductProvider with ChangeNotifier {
-   List<Product> _items = [
-    /* Product(
-      id: 'p1',
-      title: 'Red Shirt',
-      description: 'A red shirt - it is pretty red!',
-      price: 29.99,
-      imagUrl:
-
-          'https://images.unsplash.com/photo-1664747477807-566fbc875bdc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzNXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60',
-    ),
-    Product(
-      id: 'p2',
-      title: 'Trousers',
-      description: 'A nice pair of trousers.',
-      price: 59.99,
-      imagUrl:
-          'https://images.unsplash.com/photo-1664747477807-566fbc875bdc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzNXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60',
-    ),
-    Product(
-      id: 'p3',
-      title: 'Yellow Scarf',
-      description: 'Warm and cozy - exactly what you need for the winter.',
-      price: 19.99,
-      imagUrl: 'https://images.unsplash.com/photo-1665054546585-11413bcdfb52?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyOHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60',
-    ),
-    Product(
-      id: 'p4',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imagUrl:
-          'https://images.unsplash.com/photo-1665054546585-11413bcdfb52?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyOHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60',
-    ), */
-  ];
+  List<Product> _items = [];
 
   List<Product> get items {
     return [..._items];
@@ -74,9 +41,18 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
-  void updateProduct(String id, Product newproduct) {
+  Future<void> updateProduct(String id, Product newproduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
+      var url = Uri.https(
+          'shopapppra-default-rtdb.firebaseio.com', '/products/$id.json');
+      await http.patch(url,
+          body: json.encode({
+            'title': newproduct.title,
+            'description': newproduct.description,
+            'imagUrl': newproduct.imagUrl,
+            'price': newproduct.price
+          }));
       _items[prodIndex] = newproduct;
       notifyListeners();
     } else {
@@ -84,9 +60,20 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((element) => element.id == id);
+  Future<void> deleteProduct(String id) async {
+    var url = Uri.https(
+        'shopapppra-default-rtdb.firebaseio.com', '/products/$id.json');
+    final existingIdIndex = _items.indexWhere((element) => element.id == id);
+    Product? existingProduct = _items[existingIdIndex];
+    _items.removeAt(existingIdIndex);
     notifyListeners();
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _items.insert(existingIdIndex, existingProduct);
+      notifyListeners();
+      throw httpExeption('An error acured');
+    }
+    existingProduct = null;
   }
 
   Future<void> addProduct(Product product) {
