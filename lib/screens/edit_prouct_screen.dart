@@ -80,10 +80,6 @@ class _EditScreenState extends State<EditScreen> {
     if (_editProduct.id.isNotEmpty) {
       Provider.of<ProductProvider>(context, listen: false)
           .updateProduct(_editProduct.id, _editProduct);
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pop();
     } else {
       Provider.of<ProductProvider>(context, listen: false)
           .addProduct(_editProduct)
@@ -94,7 +90,10 @@ class _EditScreenState extends State<EditScreen> {
         Navigator.of(context).pop();
       });
     }
-    //Navigator.of(context).pop();
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
   }
 
   void _updateUrl() {
