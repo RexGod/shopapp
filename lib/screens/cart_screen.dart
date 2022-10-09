@@ -37,18 +37,7 @@ class CartScreen extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  TextButton(
-                      onPressed: () {
-                        Provider.of<ord.Order>(context, listen: false)
-                            .addOrderItems(
-                                carts.items.values.toList(), carts.totalAmount);
-                        carts.cleaner();
-                        Navigator.of(context).pushNamed(Order.routeName);
-                      },
-                      child: Text(
-                        'Order Now',
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      ))
+                  OrderButton(carts: carts)
                 ],
               ),
             ),
@@ -65,6 +54,49 @@ class CartScreen extends StatelessWidget {
                       )))
         ],
       ),
+    );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key? key,
+    required this.carts,
+  }) : super(key: key);
+
+  final Cart carts;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: widget.carts.totalAmount <= 0 || _isLoading
+          ? null
+          : () async {
+              setState(() {
+                _isLoading = true;
+              });
+              await Provider.of<ord.Order>(context, listen: false)
+                  .addOrderItems(widget.carts.items.values.toList(),
+                      widget.carts.totalAmount);
+              setState(() {
+                _isLoading = false;
+              });
+              widget.carts.cleaner();
+
+              //Navigator.of(context).pushNamed(Order.routeName);
+            },
+      child: _isLoading
+          ? const CircularProgressIndicator()
+          : Text(
+              'Order Now',
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
     );
   }
 }
