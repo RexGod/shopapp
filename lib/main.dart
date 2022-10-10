@@ -1,6 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:shopapp/provider/auth.dart';
 import 'package:shopapp/provider/cart.dart';
 import './screens/product_detail_screeen.dart';
 import './screens/product_overview_screen.dart';
@@ -11,6 +12,7 @@ import './screens/order_screen.dart';
 import './provider/order.dart' as ord;
 import './screens/produnt_manager_screen.dart';
 import './screens/edit_prouct_screen.dart';
+import './screens/264 auth_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,6 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => auth()),
         ChangeNotifierProvider(
           create: (context) => ProductProvider(),
         ),
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
             // ignore: deprecated_member_use
             accentColor: Colors.deepOrange,
             fontFamily: 'Lato'),
-        home: OverViewScreen(),
+        home: AuthScreen(),
         routes: {
           DetailScreen.routeName: (context) => DetailScreen(),
           CartScreen.routeName: (context) => CartScreen(),
