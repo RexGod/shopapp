@@ -6,6 +6,9 @@ import './cart.dart';
 class Order with ChangeNotifier {
   // ignore: prefer_final_fields
   List<OrderItems> _orders = [];
+  final String authToken;
+
+  Order(this.authToken, this._orders);
 
   List<OrderItems> get orders {
     return [..._orders];
@@ -13,7 +16,7 @@ class Order with ChangeNotifier {
 
   Future<void> fetchAndStoreOrders() async {
     var url =
-        Uri.https('shopapppra-default-rtdb.firebaseio.com', '/orders.json');
+        Uri.https('shopapppra-default-rtdb.firebaseio.com', '/orders.json' , {'auth' : authToken});
     final response = await http.get(url);
     final List<OrderItems> loadedOrders = [];
     final extractOrderData = json.decode(response.body) as Map<String, dynamic>;
