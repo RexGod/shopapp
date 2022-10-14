@@ -5,6 +5,8 @@ import './product.dart';
 import 'package:http/http.dart' as http;
 
 class ProductProvider with ChangeNotifier {
+  final String authToken;
+  ProductProvider(this.authToken, this._items);
   List<Product> _items = [];
 
   List<Product> get items {
@@ -20,19 +22,24 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    var url =
-        Uri.https('shopapppra-default-rtdb.firebaseio.com', '/products.json');
+    final url = Uri.https('shopapppra-default-rtdb.firebaseio.com',
+        '/products.json', {'auth': authToken});
     try {
       final response = await http.get(url);
       final extractData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractData == null) {
+        return;
+      }
       final List<Product> loadedProduct = [];
       extractData.forEach((prodId, prodData) {
         loadedProduct.add(Product(
-            id: prodId,
-            title: prodData['title'],
-            description: prodData['description'],
-            imagUrl: prodData['imagUrl'],
-            price: prodData['price']));
+          id: prodId,
+          title: prodData['title'],
+          description: prodData['description'],
+          price: prodData['price'],
+          isFavorite: prodData['isFavorite'],
+          imagUrl: prodData['imagUrl'],
+        ));
       });
       _items = loadedProduct;
       notifyListeners();
@@ -44,8 +51,8 @@ class ProductProvider with ChangeNotifier {
   Future<void> updateProduct(String id, Product newproduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      var url = Uri.https(
-          'shopapppra-default-rtdb.firebaseio.com', '/products/$id.json');
+      var url = Uri.https('shopapppra-default-rtdb.firebaseio.com',
+          '/products/$id.json', {'auth': authToken});
       await http.patch(url,
           body: json.encode({
             'title': newproduct.title,
@@ -61,8 +68,8 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    var url = Uri.https(
-        'shopapppra-default-rtdb.firebaseio.com', '/products/$id.json');
+    var url = Uri.https('shopapppra-default-rtdb.firebaseio.com',
+        '/products/$id.json', {'auth': authToken});
     final existingIdIndex = _items.indexWhere((element) => element.id == id);
     Product? existingProduct = _items[existingIdIndex];
     _items.removeAt(existingIdIndex);
@@ -71,14 +78,14 @@ class ProductProvider with ChangeNotifier {
     if (response.statusCode >= 400) {
       _items.insert(existingIdIndex, existingProduct);
       notifyListeners();
-      throw httpExeption('An error acured');
+      throw HttpExeption('An error acured');
     }
     existingProduct = null;
   }
 
   Future<void> addProduct(Product product) {
-    var url =
-        Uri.https('shopapppra-default-rtdb.firebaseio.com', '/products.json');
+    var url = Uri.https('shopapppra-default-rtdb.firebaseio.com',
+        '/products.json', {'auth': authToken});
     return http
         .post(url,
             body: json.encode({

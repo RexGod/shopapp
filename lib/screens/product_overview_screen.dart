@@ -67,6 +67,7 @@ class _OverViewScreenState extends State<OverViewScreen> {
           Consumer<Cart>(
             builder: (_, cart, children) => Badge(
               value: cart.counter.toString(),
+              // ignore: deprecated_member_use
               color: Theme.of(context).accentColor,
               child: children as Widget,
             ),
